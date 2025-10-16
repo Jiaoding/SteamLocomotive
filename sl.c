@@ -43,11 +43,15 @@
 #include <curses.h>
 #include <signal.h>
 #include <unistd.h>
+#include <stdlib.h>
+#include <string.h>
 #include "sl.h"
 
 void add_smoke(int y, int x);
-int add_D51(int x);
+int add_D51(int x, int coal_cars);
 int my_mvaddstr(int y, int x, char *str);
+
+int coal_cars_count = 1;
 
 
 int my_mvaddstr(int y, int x, char *str)
@@ -74,6 +78,19 @@ int main(int argc, char *argv[])
 {
     int x;
 
+    for (int i = 1; i < argc; i++)
+    {
+        if (strcmp(argv[i], "-n") == 0 && i + 1 < argc)
+        {
+            coal_cars_count = atoi(argv[i + 1]);
+            if (coal_cars_count < 1 || coal_cars_count > 10)
+            {
+                coal_cars_count = 1;
+            }
+            i++;
+        }
+    }
+
     initscr();
     signal(SIGINT, SIG_IGN);
     noecho();
@@ -84,7 +101,7 @@ int main(int argc, char *argv[])
 
     for (x = COLS - 1; ; --x)
     {
-        if (add_D51(x) == ERR)
+        if (add_D51(x, coal_cars_count) == ERR)
         {
             break;
         }
@@ -99,7 +116,7 @@ int main(int argc, char *argv[])
 }
 
 
-int add_D51(int x)
+int add_D51(int x, int coal_cars)
 {
     static char *d51[D51PATTERNS][D51HEIGHT + 1]
         = {{D51STR1, D51STR2, D51STR3, D51STR4, D51STR5, D51STR6, D51STR7, D51WHL11, D51WHL12, D51WHL13, D51DEL},
@@ -113,18 +130,40 @@ int add_D51(int x)
 
     int y, i, dy = 0;
 
-    if (x < - D51LENGTH)
+    int total_length = ALLLENGTH + (coal_cars - 1) * COALLENGTH;
+    if (x < - total_length)
     {
         return ERR;
     }
     y = LINES / 2 - 5;
 
+    int pattern_index = (ALLLENGTH + x) % D51PATTERNS;
+    if (pattern_index < 0)
+    {
+        pattern_index += D51PATTERNS;
+    }
+
     for (i = 0; i <= D51HEIGHT; ++i)
     {
-        my_mvaddstr(y + i, x, d51[(D51LENGTH + x) % D51PATTERNS][i]);
-        my_mvaddstr(y + i + dy, x + 53, coal[i]);
+        my_mvaddstr(y + i, x, d51[pattern_index][i]);
     }
-    add_smoke(y - 1, x + D51FUNNEL);
+
+    for (int car = 0; car < coal_cars; car++)
+    {
+        int car_x = x + 53 + (car * COALLENGTH);
+        if (car_x < COLS)
+        {
+            for (i = 0; i <= D51HEIGHT; ++i)
+            {
+                my_mvaddstr(y + i + dy, car_x, coal[i]);
+            }
+        }
+
+        if (car == 0)
+        {
+            add_smoke(y - 1, x + D51FUNNEL);
+        }
+    }
     return OK;
 }
 

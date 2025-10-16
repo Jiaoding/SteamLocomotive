@@ -9,9 +9,11 @@
 
 #define D51HEIGHT	10
 #define D51FUNNEL	 7
-#define D51LENGTH	83
-#define D51PATTERNS	 6
 
+#define D51LENGTH	54
+#define D51PATTERNS	 6
+#define COALLENGTH	29
+#define ALLLENGTH	COALLENGTH + D51LENGTH
 
 #define D51STR1  "      ====        ________                ___________ "
 #define D51STR2  "  _D _|  |_______/        \\__I_I_____===__|_________| "
@@ -47,16 +49,15 @@
 
 #define D51DEL   "                                                      "
 
-#define COAL01 "                              "
-#define COAL02 "                              "
-#define COAL03 "    _________________         "
-#define COAL04 "   _|                \\_____A  "
-#define COAL05 " =|                        |  "
-#define COAL06 " -|                        |  "
+#define COAL01 "                             "
+#define COAL02 "                             "
+#define COAL03 "    _________________        "
+#define COAL04 "   _|                \\_____A "
+#define COAL05 " =|                        | "
+#define COAL06 " -|                        | "
 #define COAL07 "__|________________________|_ "
 #define COAL08 "|__________________________|_ "
-#define COAL09 "   |_D__D__D_|  |_D__D__D_|   "
-#define COAL10 "    \\_/   \\_/    \\_/   \\_/    "
+#define COAL09 "   |_D__D__D_|  |_D__D__D_|  "
+#define COAL10 "    \\_/   \\_/    \\_/   \\_/   "
 
-#define COALDEL "                              "
-
+#define COALDEL "                             "
